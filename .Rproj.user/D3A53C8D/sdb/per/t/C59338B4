@@ -1,0 +1,17 @@
+{
+    "contents" : "#the bootstrap krippendorff alpha, written code.\ninstall.packages(\"irr\")\nlibrary(irr)\nrequire(irr)\n\nkripp.boot <- function(df, raters='rows', probs=c(.025,.975), iter=100, method='nominal') {\n  x <- numeric(iter)\n  \n  if (raters == 'cols') {\n    df <- t(df)\n  }\n  \n  for (i in seq(1,iter,1)) {\n    x[i] <- kripp.alpha(df[,sample(ncol(df), size=ncol(df), replace=TRUE)], \n                        method=method)$value\n  }\n  \n  kripp.ci <- quantile(x, probs=probs, na.rm=TRUE)\n  boot.stats <- list(mean.alpha=mean(x, na.rm=TRUE), \n                     upper=kripp.ci[2], \n                     lower=kripp.ci[1], \n                     alphas=x,\n                     raters=nrow(df),\n                     iter=iter,\n                     probs=probs,\n                     size=ncol(df))\n  class(boot.stats) <- 'kripp.boot'\n  return(boot.stats)\n}\n\nprint.kripp.boot <- function(boot.stats) {\n  cat(\"Bootstrapped Krippendorff's Alpha\",\"\\n\\n\")\n  cat('Alpha Levels for', boot.stats$raters,'raters,', \n      boot.stats$iter, ' iterations', '\\n')\n  cat('     ', boot.stats$probs[1],'= ', boot.stats$lower, '\\n')\n  cat(' Mean alpha = ', boot.stats$mean.alpha, '\\n')\n  cat('     ', boot.stats$probs[2],'= ', boot.stats$upper, '\\n')\n}\n\ninstall.packages(\"devtools\")\nlibrary(devtools)\ninstall.packages(\"roxygen2\")\nlibrary(roxygen2)\n\n",
+    "created" : 1437610906035.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3288359963",
+    "id" : "C59338B4",
+    "lastKnownWriteTime" : 1437611518,
+    "path" : "~/Desktop/Transplante_Renal_R/krippendorf_alpha_bootstrap.R",
+    "project_path" : "krippendorf_alpha_bootstrap.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
